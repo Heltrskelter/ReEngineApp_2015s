@@ -132,5 +132,8 @@ void AppClass::Display(void)
 
 void AppClass::Release(void)
 {
+	delete m_pSphere;
+	delete m_pMatirx;
+
 	super::Release(); //release the memory of the inherited fields
 }

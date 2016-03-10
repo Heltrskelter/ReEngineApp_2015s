@@ -1,5 +1,5 @@
 /*----------------------------------------------
-Programmer: Alberto Bobadilla (labigm@gmail.com)
+Programmer: Elizabeth Huntzicker, for homework for Alberto Bobadilla (labigm@gmail.com)
 Date: 2015/09
 ----------------------------------------------*/
 #ifndef __APPLICATION_H_
@@ -13,8 +13,16 @@ using namespace ReEng; //Using ReEng namespace to use all the classes in the dll
 class AppClass : public ReEngAppClass
 {
 	float fDuration = 1.0f; //Time Duration of the stops
+							//points array
+	vector3 points[11];
+	//spheres
+	PrimitiveClass* m_pSphere;
+	//m4 matrix
+	matrix4* m_pMatirx;
 public:
 	typedef ReEngAppClass super;
+
+	
 	/*
 	USAGE: Constructor
 	ARGUMENTS:

@@ -41,16 +41,45 @@ void AppClass::Update(void)
 	//Counting the cumulative time
 	static double fRunTime = 0.0f;
 	fRunTime += fCallTime;
+	
+
+	//distances
+	matrix4 distanceEarth = glm::translate(11.0f, 0.0f, 0.0f);
+	matrix4 distanceMoon = glm::translate(2.0f, 0.0f, 0.0f);
+
+	//matrix
+	matrix4 m_m4Sun = glm::scale(vector3(5.936f, 5.936f, 5.936f));
+	matrix4 m_m4Earth;
+	matrix4 m_m4Moon;
 
 	//Earth Orbit
 	double fEarthHalfOrbTime = 182.5f * m_fDay; //Earths orbit around the sun lasts 365 days / half the time for 2 stops
 	float fEarthHalfRevTime = 0.5f * m_fDay; // Move for Half a day
 	float fMoonHalfOrbTime = 14.0f * m_fDay; //Moon's orbit is 28 earth days, so half the time for half a route
+	//earth
+	float earthOrbPer = MapValue(static_cast<float>(fRunTime), 0.0f, m_fDay, 0.0f, 0.1f);
+	float earthRevPer = MapValue(static_cast<float>(fRunTime), 0.0f, fEarthHalfRevTime, 0.0f, m_fDay);
+
+	//moon
+	float moonRotPer = MapValue(static_cast<float>(fRunTime), 0.0f, fMoonHalfOrbTime, 0.0f, 1.0f);
+	
+	//quaternions
+	glm::quat startQuat = glm::quat(vector3(0.0f, 0.0f, 0.0f));
+	glm::quat endQuat = glm::quat(vector3(0.0f, 1.0f, 0.0f));
+
+	//earth orbit R*T
+	m_m4Earth *= glm::mat4_cast(glm::mix(startQuat, endQuat, earthOrbPer)) * distanceEarth * glm::scale(vector3(1.0f, 1.0f, 1.0f) * 0.524f);
+
+	//earth revolve
+	m_m4Earth *= glm::mat4_cast(glm::mix(startQuat, endQuat, earthRevPer));
+
+	//moon
+	m_m4Moon = m_m4Earth * glm::mat4_cast(glm::mix(startQuat, endQuat, earthOrbPer)) * distanceMoon * glm::scale(vector3(.27f, .27f, .27f));
 
 	//Setting the matrices
-	m_pMeshMngr->SetModelMatrix(IDENTITY_M4, "Sun");
-	m_pMeshMngr->SetModelMatrix(IDENTITY_M4, "Earth");
-	m_pMeshMngr->SetModelMatrix(IDENTITY_M4, "Moon");
+	m_pMeshMngr->SetModelMatrix(m_m4Sun, "Sun");
+	m_pMeshMngr->SetModelMatrix(m_m4Earth, "Earth");
+	m_pMeshMngr->SetModelMatrix(m_m4Moon, "Moon");
 
 	//Adds all loaded instance to the render list
 	m_pMeshMngr->AddInstanceToRenderList("ALL");
@@ -58,6 +87,8 @@ void AppClass::Update(void)
 	static int nEarthOrbits = 0;
 	static int nEarthRevolutions = 0;
 	static int nMoonOrbits = 0;
+
+
 
 	//Indicate the FPS
 	int nFPS = m_pSystem->GetFPS();
@@ -67,6 +98,8 @@ void AppClass::Update(void)
 	
 	m_pMeshMngr->Print("Time:");
 	m_pMeshMngr->PrintLine(std::to_string(fRunTime));
+
+
 
 	m_pMeshMngr->Print("Day:");
 	m_pMeshMngr->PrintLine(std::to_string(m_fDay));

@@ -14,31 +14,6 @@ void AppClass::InitVariables(void)
 	m_pMeshMngr->LoadModel("Sorted\\WallEye.bto", "WallEye");
 
 	fDuration = 1.0f;
-	
-	 m_pSphere = new PrimitiveClass[11];
-	//m4 matrix
-	m_pMatirx = new matrix4[11];
-
-
-	//fill points array
-	points[0] = vector3(-4.0f, -2.0f, 5.0f);
-	points[1] = vector3(1.0f, -2.0f, 5.0f);
-	points[2] = vector3(-3.0f, -1.0f, 3.0f);
-	points[3] = vector3(2.0f, -1.0f, 3.0f);
-	points[4] = vector3(-2.0f, 0.0f, 0.0f);
-	points[5] = vector3(3.0f, 0.0f, 0.0f);
-	points[6] = vector3(-1.0f, 1.0f, -3.0f);
-	points[7] = vector3(4.0f, 1.0f, -3.0f);
-	points[8] = vector3(0.0f, 2.0f, -5.0f);
-	points[9] = vector3(5.0f, 2.0f, -5.0f);
-	points[10] = vector3(1.0f, 3.0f, -5.0f);
-
-	//create spheres and translate matricies
-
-	for (int s = 0; s < 11; s++) {
-		m_pSphere[s].GenerateSphere(0.1f, 5, RERED);
-		m_pMatirx[s] = glm::translate(points[s]);
-	}
 }
 
 void AppClass::Update(void)
@@ -61,24 +36,7 @@ void AppClass::Update(void)
 #pragma endregion
 
 #pragma region Your Code goes here
-
 	m_pMeshMngr->SetModelMatrix(IDENTITY_M4, "WallEye");
-	
-	int startPoint = static_cast<int>(fRunTime / fDuration) % 11;
-	int endPoint = (startPoint + 1) % 11;
-
-	m_pMeshMngr->PrintLine("start: "+std::to_string( startPoint));
-	m_pMeshMngr->PrintLine("end: " + std::to_string(endPoint));
-
-	float fPercent = MapValue(static_cast<float>(fRunTime), 0.0f, static_cast<float>(fDuration), 0.0f, 1.0f);
-	fPercent -= static_cast<int>(fPercent);
-	m_pMeshMngr->PrintLine("p: " + std::to_string(fPercent));
-
-	m_pMeshMngr->SetModelMatrix(glm::translate(glm::lerp(points[startPoint], points[endPoint], fPercent)), "WallEye");
-
-	
-
-	
 #pragma endregion
 
 #pragma region Does not need changes but feel free to change anything here
@@ -116,14 +74,6 @@ void AppClass::Display(void)
 		m_pMeshMngr->AddGridToQueue(1.0f, REAXIS::XY, REBLUE * 0.75f); //renders the XY grid with a 100% scale
 		break;
 	}
-
-	//spheres
-	matrix4 mProjection = m_pCameraMngr->GetProjectionMatrix();
-	matrix4 mView = m_pCameraMngr->GetViewMatrix();
-
-	for (uint i = 0; i < 11; i++) {
-		m_pSphere[i].Render(mProjection, mView, m_pMatirx[i]);
-	}
 	
 	m_pMeshMngr->Render(); //renders the render list
 
@@ -132,8 +82,5 @@ void AppClass::Display(void)
 
 void AppClass::Release(void)
 {
-	delete m_pSphere;
-	delete m_pMatirx;
-
 	super::Release(); //release the memory of the inherited fields
 }

@@ -11,10 +11,19 @@ void AppClass::InitVariables(void)
 
 	m_pMesh = new MyMesh();
 	
-	m_nObjects = 9;
-	matrix4 m_fMatrixArray[27];
-	
-	
+	//Creating the Mesh points
+	m_pMesh->AddVertexPosition(vector3(-1.0f, -1.0f, 0.0f));
+	m_pMesh->AddVertexColor(RERED);
+	m_pMesh->AddVertexPosition(vector3( 1.0f, -1.0f, 0.0f));
+	m_pMesh->AddVertexColor(RERED);
+	m_pMesh->AddVertexPosition(vector3(-1.0f,  1.0f, 0.0f));
+	m_pMesh->AddVertexColor(RERED);
+	m_pMesh->AddVertexPosition(vector3(-1.0f,  1.0f, 0.0f));
+	m_pMesh->AddVertexColor(REBLUE);
+	m_pMesh->AddVertexPosition(vector3(1.0f, -1.0f, 0.0f));
+	m_pMesh->AddVertexColor(REBLUE);
+	m_pMesh->AddVertexPosition(vector3( 1.0f, 1.0f, 0.0f));
+	m_pMesh->AddVertexColor(REBLUE);
 
 	//Compiling the mesh
 	m_pMesh->CompileOpenGL3X();
@@ -54,7 +63,7 @@ void AppClass::Display(void)
 	matrix4 m4Projection = m_pCameraMngr->GetProjectionMatrix();
 	matrix4 m4View = m_pCameraMngr->GetViewMatrix();
 
-	m_pMesh->RenderList(m4Projection, m4View, m_fMatrixArray, m_nObjects);//Rendering nObjects
+	m_pMesh->Render(m4Projection, m4View, IDENTITY_M4);//Rendering nObjects
 
 	m_pMeshMngr->Render();
 

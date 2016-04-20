@@ -71,7 +71,7 @@ public:
 	ARGUMENTS: ---
 	OUTPUT: vector3 -> Center's of the sphere in world coordinates
 	*/
-	vector3 GetCenter(void);
+	vector3 GetCenterG(void);
 
 	/*
 	 GetRadius
@@ -89,6 +89,8 @@ public:
 	OUTPUT: bool -> check of the collision
 	*/
 	bool IsColliding(MyBoundingSphereClass* const a_pOther);
+
+	matrix4 GetModelMatrix(void);
 	
 private:
 	/*
